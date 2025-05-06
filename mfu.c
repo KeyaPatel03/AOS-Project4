@@ -13,9 +13,6 @@ static void resetPageData(page* evictedPage) {
 }
 
 page *MostFrequentlyUsed(LISTOFPAGES* pageList) {
-    if (pageList == NULL || pageList->head == NULL) {
-        return;
-    }
 
     page* mfu_page = pageList->head;
     int maxCounter = mfu_page->counter;
