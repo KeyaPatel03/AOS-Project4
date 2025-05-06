@@ -73,9 +73,11 @@ int main(int arg1, char* arg2[])
     int processesStarted = 0;
     srand(0);
     int i;
+    int SIMULATION_NUMBER;
     for(i = 0; i < SIMULATION_COUNT; i++) 
     {
-        printf("<<<<<<<======= Running simulator   %d ========>>>>>>>\n", i+1);
+        SIMULATION_NUMBER = i+1;
+        printf("<<<<<<<======= Running simulator   %d ========>>>>>>>\n", SIMULATION_NUMBER);
         LISTOFPAGES pl;
         InitPageList(&pl);
         process Q[TOTAL_PROCESS];
@@ -211,7 +213,7 @@ int main(int arg1, char* arg2[])
         float runHitRatio = (pagesAlreadyInMemory * 1.0) / totalPagesReferenced;
         float runMissRatio = (pagesSwappedIn * 1.0) / totalPagesReferenced;
 
-        printf("\n--- Run #%d Metrics ---\n", i+1);
+        printf("\n--- Run #%d Metrics ---\n", SIMULATION_NUMBER);
         printf("Processes Started: %d\n", processesStarted);
         printf("Pages Swapped-In: %d\n", pagesSwappedIn);
         printf("Total Page References: %d\n", totalPagesReferenced);
