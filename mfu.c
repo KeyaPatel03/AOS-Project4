@@ -12,7 +12,7 @@ static void resetPageData(page* evictedPage) {
     evictedPage->pageNumber = -1;
 }
 
-page *mfu(LISTOFPAGES* pageList) {
+page *MostFrequentlyUsed(LISTOFPAGES* pageList) {
     if (pageList == NULL || pageList->head == NULL) {
         return;
     }
