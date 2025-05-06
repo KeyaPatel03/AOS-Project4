@@ -74,5 +74,4 @@ sudo apt-get install make
 ./main MFU
 
 ## Command to run Random algorithm
->>>>>>> b0af5dd0a291ece353d48080f2767c0b5dbb2177
 ./main Random
