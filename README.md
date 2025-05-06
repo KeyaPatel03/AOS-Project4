@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Steps to execute the program
 
 To run the program, open the terminal in Ubuntu and run the following command
