@@ -1,5 +1,10 @@
 #include "Page.h"
 
+float avgProcessesStarted = 0;
+float avgPagesSwappedIn = 0;
+float avgTotalPagesReferenced = 0;
+float avgPagesAlreadyInMemory = 0;
+
 void DisplayMemoryMap(LISTOFPAGES* pl) {
     page* it = pl->head;
     while (it) {
@@ -202,16 +207,38 @@ int main(int arg1, char* arg2[])
             // if (totalPagesReferenced > 100)
             //     break;
         }
+    
+        float runHitRatio = (pagesAlreadyInMemory * 1.0) / totalPagesReferenced;
+        float runMissRatio = (pagesSwappedIn * 1.0) / totalPagesReferenced;
+
+        printf("\n--- Run #%d Metrics ---\n", i+1);
+        printf("Processes Started: %d\n", processesStarted);
+        printf("Pages Swapped-In: %d\n", pagesSwappedIn);
+        printf("Total Page References: %d\n", totalPagesReferenced);
+        printf("Hit Ratio: %.2f%%\n", runHitRatio * 100);
+        printf("Miss Ratio: %.2f%%\n", runMissRatio * 100);
+        
+
+        // Accumulate for final average
+        avgProcessesStarted += processesStarted;
+        avgPagesSwappedIn += pagesSwappedIn;
+        avgTotalPagesReferenced += totalPagesReferenced;
+        avgPagesAlreadyInMemory += pagesAlreadyInMemory;
+
+        // Reset for next run
+        pagesSwappedIn = 0;
+        pagesAlreadyInMemory = 0;
+        totalPagesReferenced = 0;
+        processesStarted = 0;
     }
-    float avgProcessesStarted = (float)processesStarted / SIMULATION_COUNT;
-    float avgPagesSwappedIn = (float)pagesSwappedIn / SIMULATION_COUNT;
 
-    printf("\nAverage Processes Started per Simulation: %.2f of %d\n", avgProcessesStarted, TOTAL_PROCESS);
-    printf("Average Pages Swapped-In per Simulation: %.2f\n", avgPagesSwappedIn);
-    printf("Hit Ratio: %.2f%%\n", ((pagesAlreadyInMemory * 1.0) / totalPagesReferenced) * 100);
-    printf("Miss Ratio: %.2f%%\n", ((pagesSwappedIn * 1.0) / totalPagesReferenced) * 100);
+// Final averages
+printf("\n=== Final Averages ===\n");
+printf("Average Processes Started: %.2f of %d\n", avgProcessesStarted / SIMULATION_COUNT, TOTAL_PROCESS);
+printf("Average Pages Swapped-In: %.2f\n", avgPagesSwappedIn / SIMULATION_COUNT);
+float finalHitRatio = (float)avgPagesAlreadyInMemory / avgTotalPagesReferenced;
+float finalMissRatio = 1.0 - finalHitRatio;
+printf("Average Hit Ratio: %.2f%%\n", finalHitRatio * 100);
+printf("Average Miss Ratio: %.2f%%\n", finalMissRatio * 100);
 
-   /* printf("Processes Started: %d of %d\n", processesStarted / SIMULATION_COUNT, TOTAL_PROCESS);
-    printf("Hit Ratio %0.2f%%\n", ((pagesAlreadyInMemory * 1.0) / totalPagesReferenced) * 100);
-    printf("Miss Ratio %0.2f%%\n", ((pagesSwappedIn * 1.0) / totalPagesReferenced) * 100); */
 }
