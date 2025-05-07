@@ -20,7 +20,6 @@ char* getMemoryMapString(LISTOFPAGES* pl) {
     return map;
 }
 
-
 int main(int arg1, char* arg2[]) 
 {
     int timeStamp = 0;  //Time stamp simulator
@@ -75,11 +74,23 @@ int main(int arg1, char* arg2[])
     int totalPagesReferenced = 0;
     int pagesAlreadyInMemory = 0;
     int processesStarted = 0;
+    int totalPagesReferenced_PerRun;
+    int pagesAlreadyInMemory_PerRun;
+    int pagesSwappedIn_PerRun;
+    double Hit_Ratio_Sum=0;
+    double Miss_Ratio_Sum=0;
+    double Hit_Ratio_PerRun=0;
+    double Miss_Ratio_PerRun=0;
     srand(0);
     int i;
     for(i = 0; i < SIMULATION_COUNT; i++) 
     {
         printf("<<<<<<<======= Running simulator   %d ========>>>>>>>\n", i+1);
+        pagesAlreadyInMemory_PerRun=0;
+        pagesSwappedIn_PerRun=0;
+        totalPagesReferenced_PerRun=0;
+        Hit_Ratio_PerRun=0;
+        Miss_Ratio_PerRun=0;
         LISTOFPAGES pl;
         InitPageList(&pl);
         process Q[TOTAL_PROCESS];
@@ -126,6 +137,8 @@ int main(int arg1, char* arg2[])
                     pagesSwappedIn++;
                     totalPagesReferenced++;
                     processesStarted++;
+                    pagesSwappedIn_PerRun++;
+                    totalPagesReferenced_PerRun++;
                 } 
                 else {
                     break;      
@@ -157,6 +170,8 @@ int main(int arg1, char* arg2[])
                             
                             pagesAlreadyInMemory++;
                             totalPagesReferenced++;
+                            pagesAlreadyInMemory_PerRun++;
+                            totalPagesReferenced_PerRun++;
                             continue;
                         }
 
@@ -186,6 +201,8 @@ int main(int arg1, char* arg2[])
 
                         pagesSwappedIn++;   
                         totalPagesReferenced++;
+                        pagesSwappedIn_PerRun++;
+                        totalPagesReferenced_PerRun++;
                     }
                 }
             }
@@ -214,14 +231,25 @@ int main(int arg1, char* arg2[])
             // if (totalPagesReferenced > 100)
             //     break;
         }
+        Hit_Ratio_PerRun=((pagesAlreadyInMemory_PerRun * 1.0) / totalPagesReferenced_PerRun) * 100;
+        printf("Hit Ratio: %.2f%%\n", Hit_Ratio_PerRun);
+        Miss_Ratio_PerRun=((pagesSwappedIn_PerRun * 1.0) / totalPagesReferenced_PerRun) * 100;
+        printf("Miss Ratio: %.2f%%\n", Miss_Ratio_PerRun);
+        Hit_Ratio_Sum = Hit_Ratio_Sum + Hit_Ratio_PerRun;
+        Miss_Ratio_Sum = Miss_Ratio_Sum + Miss_Ratio_PerRun;
+        printf("Hit Ratio Sum: %.2f%%\n", Hit_Ratio_Sum);
+        printf("Miss Ratio Sum: %.2f%%\n", Miss_Ratio_Sum);
+        
+
+
     }
     float avgProcessesStarted = (float)processesStarted / SIMULATION_COUNT;
     float avgPagesSwappedIn = (float)pagesSwappedIn / SIMULATION_COUNT;
 
-    printf("\nAverage Processes Started per Simulation: %.2f of %d\n", avgProcessesStarted, TOTAL_PROCESS);
+    printf("\nProcesses Started per Simulation: %.2f of %d\n", avgProcessesStarted, TOTAL_PROCESS);
     printf("Average Pages Swapped-In per Simulation: %.2f\n", avgPagesSwappedIn);
-    printf("Hit Ratio: %.2f%%\n", ((pagesAlreadyInMemory * 1.0) / totalPagesReferenced) * 100);
-    printf("Miss Ratio: %.2f%%\n", ((pagesSwappedIn * 1.0) / totalPagesReferenced) * 100);
-
+  
+    printf("Average Hit Ratio: %.2f%%\n", (Hit_Ratio_Sum / SIMULATION_COUNT));
+    printf("Average Miss Ratio: %.2f%%\n", (Miss_Ratio_Sum / SIMULATION_COUNT));
 
 }
