@@ -148,6 +148,6 @@ int CompArrTime(const void* a,const void* b)
 }
 
 // display page status
-void DisplayStatus(page *p, float timestamp, char *status) {
-    printf("timestamp: %2.1f seconds, process id: %3d, page: %3d, status: %s\n", timestamp, p->pid, p->pageNumber, status);
+void DisplayStatus(page *p, float timestamp, char *processname, char *status) {
+    printf("timestamp: %2.1f seconds, process name:%s, process id: %3d, page referenced: %3d, status: %s\n", timestamp, processname, p->pid, p->pageNumber, status);
 }

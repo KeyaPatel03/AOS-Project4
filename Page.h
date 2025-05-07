@@ -18,10 +18,6 @@
 extern int simulationClock;
 extern int *pagingOPT;
 
-// typedef struct 
-// {
-//     int pid, pageCounter, arrivalTime, serviceDuration, originalDuration, pageReference;
-// } process;
 
 typedef struct {
     int pid;
@@ -73,7 +69,8 @@ int GenNextPageNumber(int,int);
 int CompArrTime(const void* ,const void*);
 
 // Page status
-void DisplayStatus(page *p, float timestamp, char *status);
+//void DisplayStatus(page *p, float timestamp, char *status);
+void DisplayStatus(page *p, float timestamp, char *processname, char *status);
 
 //Pages id who are free
 page* PageIDFree(LISTOFPAGES*,int,int);

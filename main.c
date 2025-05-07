@@ -1,21 +1,25 @@
 #include "Page.h"
 
-float avgProcessesStarted = 0;
-float avgPagesSwappedIn = 0;
-float avgTotalPagesReferenced = 0;
-float avgPagesAlreadyInMemory = 0;
-
-void DisplayMemoryMap(LISTOFPAGES* pl) {
+char* getMemoryMapString(LISTOFPAGES* pl) {
+    static char map[101]; // 100 pages + null terminator
     page* it = pl->head;
-    while (it) {
+    int i = 0;
+    while (it && i < 100) {
         if (it->pid == -1)
-            printf(".");
+            map[i] = '.';
         else
-            printf("%c", 'A' + (it->pid % 26));  // A-Z mapping
+            map[i] = 'A' + (it->pid % 26);
         it = it->next;
+        i++;
     }
-    printf("\n");
+    while (i < 100) {
+        map[i] = '.';
+        i++;
+    }
+    map[100] = '\0';
+    return map;
 }
+
 
 int main(int arg1, char* arg2[]) 
 {
@@ -73,11 +77,9 @@ int main(int arg1, char* arg2[])
     int processesStarted = 0;
     srand(0);
     int i;
-    int SIMULATION_NUMBER;
     for(i = 0; i < SIMULATION_COUNT; i++) 
     {
-        SIMULATION_NUMBER = i+1;
-        printf("<<<<<<<======= Running simulator   %d ========>>>>>>>\n", SIMULATION_NUMBER);
+        printf("<<<<<<<======= Running simulator   %d ========>>>>>>>\n", i+1);
         LISTOFPAGES pl;
         InitPageList(&pl);
         process Q[TOTAL_PROCESS];
@@ -87,12 +89,14 @@ int main(int arg1, char* arg2[])
             Q[i].pid = i;
             Q[i].pageCounter = pageCountOPT[rand() % 4];
             snprintf(Q[i].name, sizeof(Q[i].name), "%c%d", 'A' + (i % 26), i / 26);
+            //printf("DEBUG: Set name for pid %d: %s\n", Q[i].pid, Q[i].name);
             Q[i].arrivalTime = rand() % 60;
             Q[i].serviceDuration =  1 + rand() % PROCESS_DURATION; //Maximum process duration
             Q[i].originalDuration =  Q[i].serviceDuration;
             Q[i].pageReference = 0; //All processes begin with page 0
+            //printf("<process Name:%s, Process size in pages:%d, Arrival time:%d, Service Duration:%d>\n", Q[i].name, Q[i].pageCounter, Q[i].arrivalTime, Q[i].serviceDuration);
         }
-
+       
         qsort(Q,TOTAL_PROCESS,sizeof(process),CompArrTime);
 
         int index = 0; //Index to the start of process queue
@@ -115,8 +119,10 @@ int main(int arg1, char* arg2[])
                     // timeStamp + 1, Q[i].name, Q[i].pid, Q[i].pageCounter, Q[i].originalDuration);
 
                     //DisplayStatus(p, timeStamp, "need first page to run");
+                    char* memMap = getMemoryMapString(&pl);
+                    printf("<timestamp:%d, process name:%s, process status:Enter, size in pages:%d, service duration:%d, memory map:%s>\n", timeStamp, Q[index].name, Q[index].pageCounter, Q[index].originalDuration, memMap);
+                    
                     index++;
-
                     pagesSwappedIn++;
                     totalPagesReferenced++;
                     processesStarted++;
@@ -147,7 +153,8 @@ int main(int arg1, char* arg2[])
                             pagePointer->counter++;
                             pagePointer->loadTime = timeStamp + (0.1*i);
                             
-                            DisplayStatus(pagePointer, pagePointer->loadTime, "page already in memory");
+                            DisplayStatus(pagePointer, pagePointer->loadTime, Q[j].name, "page already in memory");
+                            
                             pagesAlreadyInMemory++;
                             totalPagesReferenced++;
                             continue;
@@ -175,7 +182,7 @@ int main(int arg1, char* arg2[])
                         pge->loadTime = pge->timeBought;
                         pge->counter = 0;
 
-                        DisplayStatus(pge, pge->timeBought, message);   
+                        DisplayStatus(pge, pge->timeBought, Q[j].name, message);   
 
                         pagesSwappedIn++;   
                         totalPagesReferenced++;
@@ -190,10 +197,9 @@ int main(int arg1, char* arg2[])
                 Q[j].serviceDuration--;
                 if(Q[j].serviceDuration == 0) 
                 {
-                    /*printf("####################################################################\n");
-                    printf("Process id %d is done. Memory is getting free .... \n",Q[j].pid);
-                    printf("####################################################################\n");*/
-                    printf("timestamp: %2d.0 seconds, process %s (id: %d), page count: %2d, duration: %d, status: exiting\n", timeStamp + 1, Q[j].name, Q[j].pid, Q[j].pageCounter, Q[j].originalDuration);
+                    
+                    char* memMap = getMemoryMapString(&pl);
+                    printf("<timestamp:%d, process name:%s, process status:Exit, size in pages:%d, service duration:%d, memory map:%s>\n", timeStamp + 1, Q[j].name, Q[j].pageCounter, Q[j].originalDuration, memMap);
                     FreeMemory(&pl,Q[j].pid);
 
                     // printf("timestamp: %2d.0 seconds, process id: %3d, page count: %2d, duration: %d, status: exiting\n", timeStamp+1, Q[j].pid, Q[j].pageCounter, Q[j].originalDuration);
@@ -201,46 +207,21 @@ int main(int arg1, char* arg2[])
                 }
             }
             printf("##########################################################################################\n");
-            printf("Memory Map at time %.1f seconds:\n", timeStamp * 1.0);
-            DisplayMemoryMap(&pl);
+           
 
             usleep(900);
 
             // if (totalPagesReferenced > 100)
             //     break;
         }
-    
-        float runHitRatio = (pagesAlreadyInMemory * 1.0) / totalPagesReferenced;
-        float runMissRatio = (pagesSwappedIn * 1.0) / totalPagesReferenced;
-
-        printf("\n--- Run #%d Metrics ---\n", SIMULATION_NUMBER);
-        printf("Processes Started: %d\n", processesStarted);
-        printf("Pages Swapped-In: %d\n", pagesSwappedIn);
-        printf("Total Page References: %d\n", totalPagesReferenced);
-        printf("Hit Ratio: %.2f%%\n", runHitRatio * 100);
-        printf("Miss Ratio: %.2f%%\n", runMissRatio * 100);
-        
-
-        // Accumulate for final average
-        avgProcessesStarted += processesStarted;
-        avgPagesSwappedIn += pagesSwappedIn;
-        avgTotalPagesReferenced += totalPagesReferenced;
-        avgPagesAlreadyInMemory += pagesAlreadyInMemory;
-
-        // Reset for next run
-        pagesSwappedIn = 0;
-        pagesAlreadyInMemory = 0;
-        totalPagesReferenced = 0;
-        processesStarted = 0;
     }
+    float avgProcessesStarted = (float)processesStarted / SIMULATION_COUNT;
+    float avgPagesSwappedIn = (float)pagesSwappedIn / SIMULATION_COUNT;
 
-// Final averages
-printf("\n=== Final Averages ===\n");
-printf("Average Processes Started: %.2f of %d\n", avgProcessesStarted / SIMULATION_COUNT, TOTAL_PROCESS);
-printf("Average Pages Swapped-In: %.2f\n", avgPagesSwappedIn / SIMULATION_COUNT);
-float finalHitRatio = (float)avgPagesAlreadyInMemory / avgTotalPagesReferenced;
-float finalMissRatio = 1.0 - finalHitRatio;
-printf("Average Hit Ratio: %.2f%%\n", finalHitRatio * 100);
-printf("Average Miss Ratio: %.2f%%\n", finalMissRatio * 100);
+    printf("\nAverage Processes Started per Simulation: %.2f of %d\n", avgProcessesStarted, TOTAL_PROCESS);
+    printf("Average Pages Swapped-In per Simulation: %.2f\n", avgPagesSwappedIn);
+    printf("Hit Ratio: %.2f%%\n", ((pagesAlreadyInMemory * 1.0) / totalPagesReferenced) * 100);
+    printf("Miss Ratio: %.2f%%\n", ((pagesSwappedIn * 1.0) / totalPagesReferenced) * 100);
+
 
 }
