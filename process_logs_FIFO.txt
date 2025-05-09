@@ -4845,8 +4845,8 @@ timestamp: 59.9 seconds, process name:C3, process id:  80, page referenced:   1,
 ##########################################################################################
 Hit Ratio: 67.83%
 Miss Ratio: 32.17%
-Hit Ratio Sum: 67.83%
-Miss Ratio Sum: 32.17%
+Hit Ratio Sum: 67.83
+Miss Ratio Sum: 32.17
 <<<<<<<======= Running simulator   2 ========>>>>>>>
 <timestamp:0, process name:D5, process status:Enter, size in pages:17, service duration:4, memory map:D...................................................................................................>
 <timestamp:0, process name:B1, process status:Enter, size in pages:11, service duration:1, memory map:DB..................................................................................................>
@@ -9804,8 +9804,8 @@ timestamp: 59.9 seconds, process name:N0, process id:  13, page referenced:   0,
 ##########################################################################################
 Hit Ratio: 67.09%
 Miss Ratio: 32.91%
-Hit Ratio Sum: 134.91%
-Miss Ratio Sum: 65.09%
+Hit Ratio Sum: 134.91
+Miss Ratio Sum: 65.09
 <<<<<<<======= Running simulator   3 ========>>>>>>>
 <timestamp:0, process name:N4, process status:Enter, size in pages:17, service duration:5, memory map:N...................................................................................................>
 <timestamp:0, process name:B2, process status:Enter, size in pages:31, service duration:3, memory map:NB..................................................................................................>
@@ -14770,8 +14770,8 @@ timestamp: 59.9 seconds, process name:J5, process id: 139, page referenced:   0,
 ##########################################################################################
 Hit Ratio: 66.11%
 Miss Ratio: 33.89%
-Hit Ratio Sum: 201.02%
-Miss Ratio Sum: 98.98%
+Hit Ratio Sum: 201.02
+Miss Ratio Sum: 98.98
 <<<<<<<======= Running simulator   4 ========>>>>>>>
 <timestamp:0, process name:J4, process status:Enter, size in pages:17, service duration:4, memory map:J...................................................................................................>
 <timestamp:0, process name:J2, process status:Enter, size in pages:31, service duration:2, memory map:JJ..................................................................................................>
@@ -19649,8 +19649,8 @@ timestamp: 59.9 seconds, process name:W3, process id: 100, page referenced:  10,
 ##########################################################################################
 Hit Ratio: 66.20%
 Miss Ratio: 33.80%
-Hit Ratio Sum: 267.22%
-Miss Ratio Sum: 132.78%
+Hit Ratio Sum: 267.22
+Miss Ratio Sum: 132.78
 <<<<<<<======= Running simulator   5 ========>>>>>>>
 <timestamp:0, process name:Q4, process status:Enter, size in pages:31, service duration:4, memory map:Q...................................................................................................>
 ##########################################################################################
@@ -24453,8 +24453,8 @@ timestamp: 59.9 seconds, process name:S4, process id: 122, page referenced:   4,
 ##########################################################################################
 Hit Ratio: 66.21%
 Miss Ratio: 33.79%
-Hit Ratio Sum: 333.43%
-Miss Ratio Sum: 166.57%
+Hit Ratio Sum: 333.43
+Miss Ratio Sum: 166.57
 
 Processes Started per Simulation: 150.00 of 150
 Average Pages Swapped-In per Simulation: 1491.80

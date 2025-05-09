@@ -237,8 +237,8 @@ int main(int arg1, char* arg2[])
         printf("Miss Ratio: %.2f%%\n", Miss_Ratio_PerRun);
         Hit_Ratio_Sum = Hit_Ratio_Sum + Hit_Ratio_PerRun;
         Miss_Ratio_Sum = Miss_Ratio_Sum + Miss_Ratio_PerRun;
-        printf("Hit Ratio Sum: %.2f%%\n", Hit_Ratio_Sum);
-        printf("Miss Ratio Sum: %.2f%%\n", Miss_Ratio_Sum);
+        printf("Hit Ratio Sum: %.2f\n", Hit_Ratio_Sum);
+        printf("Miss Ratio Sum: %.2f\n", Miss_Ratio_Sum);
         
 
 
